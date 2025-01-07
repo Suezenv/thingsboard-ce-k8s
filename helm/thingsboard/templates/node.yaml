@@ -85,15 +85,19 @@ spec:
             value: "false"
           - name: CACHE_TYPE
             value: "redis"
+          - name: DEFAULT_INACTIVITY_TIMEOUT
+            value: {{ .Values.node.state.defaultInactivityTimeoutInSec | default 600 | quote }}
+          - name: DEFAULT_STATE_CHECK_INTERVAL
+            value: {{ .Values.node.state.defaultStateCheckIntervalInSec | default 60 | quote }}
           - name: REDIS_HOST
-{{- if .Values.redis.enabled }}            
+{{- if .Values.redis.enabled }}
             value: "{{ .Release.Name }}-redis-master"
 {{ else }}
             value: "{{ .Values.redis.host }}"
 {{- end }}
           - name: REDIS_PASSWORD
             value: "{{ .Values.redis.auth.password }}"
-{{- if and (.Values.node.licenseSecret.name)  (.Values.node.licenseSecret.key) }} 
+{{- if and (.Values.node.licenseSecret.name)  (.Values.node.licenseSecret.key) }}
           - name: TB_LICENSE_SECRET
             valueFrom:
               secretKeyRef:
